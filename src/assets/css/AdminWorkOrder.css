@@ -1,0 +1,38 @@
+.el-header {
+    background-color: #b3c0d1;
+    color: var(--el-text-color-primary);
+    text-align: center;
+    line-height: 60px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #1c51a3;
+}
+
+.el-header h1 {
+    font-size: 22px;
+    font-weight: 700;
+}
+.el-header p {
+    font-size: 16px;
+}
+
+.el-aside {
+    background-color: #FFFF00;
+    box-sizing: border-box;
+    width: auto;
+}
+.el-aside h4 {
+    color: #000000;
+    margin-bottom: 20px;
+}
+
+.el-main {
+    background-color: #e9eef3;
+}
+
+/*.el-menu-vertical:not(.el-menu--collapse) {*/
+/*    width: 200px;*/
+/*    min-height: 400px;*/
+/*}*/
