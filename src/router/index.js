@@ -3,6 +3,7 @@ import HelloWorld from "@/components/HelloWorld.vue";
 import AdminWorkOrder from "@/views/AdminWorkOrder.vue";
 import LoginVue from "@/views/LoginVue.vue";
 import RegisterVue from "@/views/RegisterVue.vue";
+import CitySelection from "@/views/CitySelection.vue";
 
 const routes = [
     {
@@ -24,6 +25,11 @@ const routes = [
         path: '/register',
         name: 'RegisterVue',
         component: RegisterVue
+    },
+    {
+        path: '/citySelection',
+        name: 'CitySelection',
+        component: CitySelection
     }
 ]
 

@@ -19,10 +19,16 @@
 }
 
 .el-aside {
-    background-color: #FFFF00;
     box-sizing: border-box;
     width: auto;
 }
+
+.el-aside-inside {
+    width: 260px;
+    border-right: 1px solid #000000; /* 设置右边框为灰色，可以根据需要调整颜色和宽度 */
+    padding-right: 15px; /* 可选：增加右边距以增强分隔感 */
+}
+
 .el-aside h4 {
     color: #000000;
     margin-bottom: 20px;
@@ -32,7 +38,24 @@
     background-color: #e9eef3;
 }
 
-/*.el-menu-vertical:not(.el-menu--collapse) {*/
-/*    width: 200px;*/
-/*    min-height: 400px;*/
-/*}*/
+.el-main-inside {
+    background-color: #FF8800;
+}
+
+.el-menu-vertical:not(.el-menu--collapse) {
+    width: 200px;
+    min-height: 400px;
+}
+
+.el-icon-fold {
+    border-width: 10px;
+    border-color: #000000;
+    cursor: pointer;
+}
+
+.el-image {
+    width: 40px;
+    height: 40px;
+    /*使图片以圆形展示*/
+    border-radius: 50%;
+}
