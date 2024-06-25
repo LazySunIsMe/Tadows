@@ -72,137 +72,121 @@
     </div>
 </template>
 
-<script>
+<script setup>
 import {reactive, toRefs, ref, onMounted, onUnmounted} from "vue";
 import { useRouter } from "vue-router";
 import '@/assets/css/RegisterForm.css';
 
-export default {
-    name: "RegisterVue",
-    setup() {
-        const router = useRouter();
+const router = useRouter()
 
-        const state = reactive({
-            registerForm: {
-                username: "",
-                password: "",
-                confirmPassword: "",
-                nickname: "",
-                age: "",
-                gender: ""
-            },
-            isInputValid: ref(false),
-            prefixIcon: ref('user')
-        });
+const registerForm = reactive({
+    username: "",
+    password: "",
+    confirmPassword: "",
+    nickname: "",
+    age: "",
+    gender: ""
+})
 
-        const rules = {
-            username: [
-                { required: true, message: "请输入手机号或邮箱", trigger: "blur" },
-                {
-                    validator: (rule, value, callback) => {
-                        // const phoneRegex = /^1\d{10}$/;
-                        const phoneRegex = /^1[3,4,5,7,8][0-9]{9}$/;
-                        // const emailRegex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
-                        const emailRegex = /^\b[\w.%+-]+@[\w.-]+\.[a-zA-Z]{2,6}\b$/
-                        if (phoneRegex.test(value) || emailRegex.test(value)) {
-                            state.isInputValid = true;
-                            callback();
-                        } else {
-                            state.isInputValid = false;
-                            callback(new Error("请输入正确的手机号或邮箱"));
-                        }
-                    },
-                    trigger: "blur"
-                }
-            ],
-            password: [
-                { required: true, message: "请输入密码", trigger: "blur" },
-                {
-                    pattern: /^(?!\d+$)(?![a-zA-Z]+$)(?![^\da-zA-Z]+$).{8,16}$/,
-                    message: "密码为8-16位，且需包含字母和数字",
-                    trigger: "blur"
-                }
-            ],
-            confirmPassword: [
-                { required: true, message: "请再次输入密码", trigger: "blur" },
-                {
-                    validator: (rule, value, callback) => {
-                        if (value === state.registerForm.password) {
-                            callback();
-                        } else {
-                            callback(new Error("两次输入密码不一致"));
-                        }
-                    },
-                    trigger: "blur"
-                }
-            ]
-        };
+const registerFormRef = ref(null)
 
-        const updatePrefixIcon = (value) => {
-            const phoneRegex = /^1\d{10}$/;
-            const emailRegex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
+const isInputValid =  ref(false)
 
-            if (phoneRegex.test(value)) {
-                state.prefixIcon = 'iphone'; // 手机图标
-            } else if (emailRegex.test(value)) {
-                state.prefixIcon = 'message'; // 信封图标
-            } else {
-                state.prefixIcon = 'user'; // 默认图标
-            }
-            
-        };
+const prefixIcon = ref('user')
 
-
-        const registerFormRef = ref(null);
-
-        const sendVerificationCode = () => {
-            // 发送验证码逻辑
-            console.log("发送验证码至:", state.registerForm.username);
-        };
-
-        const handleRegisterSubmit = event => {
-            // 检查是否按下了回车键
-            if (event.key === 'Enter' || event.code === 'Enter') {
-                // 执行表单提交操作
-                handleRegister();
-            }
-        };
-        // 在组件加载后添加事件监听
-        onMounted(() => {
-            window.addEventListener('keyup', handleRegisterSubmit);
-        });
-
-        // 在组件销毁前移除事件监听
-        onUnmounted(() => {
-            window.removeEventListener('keyup', handleRegisterSubmit);
-        });
-
-        function handleRegister() {
-            registerFormRef.value.validate((valid) => {
-                if (valid) {
-                    alert("注册成功！");
+const rules = {
+    username: [
+        { required: true, message: "请输入手机号或邮箱", trigger: "blur" },
+        {
+            validator: (rule, value, callback) => {
+                // const phoneRegex = /^1\d{10}$/;
+                const phoneRegex = /^1[3,4,5,7,8][0-9]{9}$/;
+                // const emailRegex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
+                const emailRegex = /^\b[\w.%+-]+@[\w.-]+\.[a-zA-Z]{2,6}\b$/
+                if (phoneRegex.test(value) || emailRegex.test(value)) {
+                    isInputValid.value = true;
+                    callback();
                 } else {
-                    console.log("error submit!!");
-                    return false;
+                    isInputValid.value = false;
+                    callback(new Error("请输入正确的手机号或邮箱"));
                 }
-            });
+            },
+            trigger: "blur"
         }
-
-        function goToLogin() {
-            router.push({ path: "/login" });
+    ],
+    password: [
+        { required: true, message: "请输入密码", trigger: "blur" },
+        {
+            pattern: /^(?!\d+$)(?![a-zA-Z]+$)(?![^\da-zA-Z]+$).{8,16}$/,
+            message: "密码为8-16位，且需包含字母和数字",
+            trigger: "blur"
         }
+    ],
+    confirmPassword: [
+        { required: true, message: "请再次输入密码", trigger: "blur" },
+        {
+            validator: (rule, value, callback) => {
+                if (value === registerForm.password) {
+                    callback();
+                } else {
+                    callback(new Error("两次输入密码不一致"));
+                }
+            },
+            trigger: "blur"
+        }
+    ]
+}
 
-        return {
-            ...toRefs(state),
-            rules,
-            registerFormRef,
-            sendVerificationCode,
-            handleRegister,
-            updatePrefixIcon,
-            goToLogin
-        };
+const updatePrefixIcon = (value) => {
+    const phoneRegex = /^1\d{10}$/;
+    const emailRegex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
+
+    if (phoneRegex.test(value)) {
+        prefixIcon.value = 'iphone'; // 手机图标
+    } else if (emailRegex.test(value)) {
+        prefixIcon.value = 'message'; // 信封图标
+    } else {
+        prefixIcon.value = 'user'; // 默认图标
+    }
+}
+
+const sendVerificationCode = () => {
+    // 发送验证码逻辑
+    console.log("发送验证码至:", registerForm.username);
+};
+
+const handleRegisterSubmit = event => {
+    // 检查是否按下了回车键
+    if (event.key === 'Enter' || event.code === 'Enter') {
+        // 执行表单提交操作
+        handleRegister();
     }
 };
+// 在组件加载后添加事件监听
+onMounted(() => {
+    window.addEventListener('keyup', handleRegisterSubmit);
+});
+
+// 在组件销毁前移除事件监听
+onUnmounted(() => {
+    window.removeEventListener('keyup', handleRegisterSubmit);
+});
+
+function handleRegister() {
+    registerFormRef.value.validate((valid) => {
+        if (valid) {
+            alert("注册成功！");
+        } else {
+            console.log("error submit!!");
+            return false;
+        }
+    });
+}
+
+function goToLogin() {
+    router.push({ path: "/login" });
+}
+
 </script>
 
 <style scoped>

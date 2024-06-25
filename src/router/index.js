@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import HelloWorld from "@/components/HelloWorld.vue";
 import AdminWorkOrder from "@/views/AdminWorkOrder.vue";
+import Admin from '@/components/Admin/Admin.vue';
 import LoginVue from "@/views/LoginVue.vue";
 import RegisterVue from "@/views/RegisterVue.vue";
 import CitySelection from "@/views/CitySelection.vue";
@@ -12,9 +13,16 @@ const routes = [
         component: HelloWorld
     },
     {
-        path: '/adminWorkOrder',
-        name: 'AdminWorkOrder',
-        component: AdminWorkOrder
+        path: '/admin',
+        name: 'Admin',
+        component: Admin,
+        children: [
+            {
+                path: '/admin/workOrder',
+                name: 'AdminWorkOrder',
+                component: AdminWorkOrder
+            }
+        ]
     },
     {
         path: '/login',

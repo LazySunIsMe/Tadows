@@ -1,5 +1,4 @@
 <template lang="html">
-    <Admin>
         <el-container>
             <el-aside class="el-aside-inside">
                 <h4>监督记录查询</h4>
@@ -59,11 +58,10 @@
                 </el-scrollbar>
             </el-main>
         </el-container>
-    </Admin>
 
     <AdminRecordDialog
         v-model:visible="visible"
-        ref="recordDialogRef"
+        ref=recordDialogRef
         @close="closeDialog(false)"
     />
 </template>
@@ -76,7 +74,7 @@ import {Clock, DataBoard, DataLine, Document, Edit, House, Setting, User, WindPo
 import Admin from '@/components/Admin/Admin.vue';
 import AdminRecordDialog from "@/components/Admin/AdminRecordDialog.vue";
 
-const recordDialogRef = ref(null)
+const recordDialogRef = ref()
 const visible = ref(false)
 let recordForm = reactive({
     address:"",
@@ -97,7 +95,7 @@ function doSelect() {
 }
 
 const checkDetail = () => {
-    recordDialogRef.value.open()
+    recordDialogRef.value.open1()
 }
 
 function checkDetail2() {

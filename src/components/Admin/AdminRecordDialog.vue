@@ -1,5 +1,6 @@
 <template>
-    <el-dialog :model-value="visible" ref="recordDialogRef" title="监督信息详情" width="600" @close="handleClose">
+    <el-dialog :model-value="visible" v-model="dialogVisible" title="监督信息详情" width="600" @close="handleClose">
+<!--        奇了个大怪啊，录个视频先-->
         <el-form :model="dialogForm">
             <!-- ID和姓名 -->
             <el-row :gutter="20">
@@ -99,7 +100,7 @@
         <template #footer>
             <div class="dialog-footer">
                 <el-button @click="close">Cancel</el-button>
-                <el-button type="primary" @click="close">Confirm</el-button>
+                <el-button type="primary" @click="close1">Confirm</el-button>
             </div>
         </template>
     </el-dialog>
@@ -113,6 +114,16 @@ import { provinceAndCityData } from "element-china-area-data";
  * @author Kardia_sfx
  * @date 06-25-2024 11:26
  */
+
+const dialogVisible = ref(false)
+
+const open1 = () => {
+    dialogVisible.value = true
+}
+
+const close1 = () => {
+    dialogVisible.value = false
+}
 
 // const visible = ref(false)
 const props = defineProps({
@@ -141,6 +152,7 @@ const state = reactive({
 const open = () => {
     console.log("对话框的open函数")
     internalVisible.value = true
+    emit('update:visible',true)
 }
 
 const close = () => {
@@ -160,6 +172,8 @@ const cityProps = {
 defineExpose({
     open,
     close,
+    open1,
+    close1,
 })
 
 function exit() {

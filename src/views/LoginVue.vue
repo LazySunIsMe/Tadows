@@ -30,88 +30,73 @@
     </div>
 </template>
 
-<script>
-import {reactive, toRefs, ref, onMounted, onUnmounted} from "vue";
-import { useRouter, useRoute } from "vue-router";
+<script setup>
+import {reactive, ref, onMounted, onUnmounted} from "vue";
+import { useRouter } from "vue-router";
 import '@/assets/css/LoginForm.css';
 
-export default {
+const router = useRouter();
 
-    name:"LoginVue",
-    setup() {
-        const router = useRouter();
+const loginForm = reactive({
+        username: '',
+        password: ''
+});
 
-        const state = reactive({
-            loginForm: {
-                username: '',
-                password: ''
-            }
-        });
+const loginFormRef = ref(null);
 
-        const rules = {
-            username: [
-                { required:true, message: '请输入用户名', trigger: 'blur' },
-                {
-                    validator: (rule, value, callback) => {
-                        const phoneRegex = /^1\d{10}$/;
-                        const emailRegex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
-                        if (phoneRegex.test(value) || emailRegex.test(value)) {
-                            callback();
-                        } else {
-                            callback(new Error('请输入正确的手机号或邮箱'));
-                        }
-                    },
-                    trigger: 'blur'
-                }
-            ],
-            password: [
-                { required:true, message: '请输入密码', trigger: 'blur' }
-            ]
-        };
-
-        const loginFormRef = ref(null);
-
-        const handleLoginSubmit = event => {
-            // 检查是否按下了回车键
-            if (event.key === 'Enter' || event.code === 'Enter') {
-                // 执行表单提交操作
-                handleLogin();
-            }
-        };
-        // 在组件加载后添加事件监听
-        onMounted(() => {
-            window.addEventListener('keyup', handleLoginSubmit);
-        });
-
-        // 在组件销毁前移除事件监听
-        onUnmounted(() => {
-            window.removeEventListener('keyup', handleLoginSubmit);
-        });
-
-        function handleLogin()  {
-            loginFormRef.value.validate((valid) => {
-                if (valid) {
-                    alert('登录成功！');
+const rules = {
+    username: [
+        { required:true, message: '请输入用户名', trigger: 'blur' },
+        {
+            validator: (rule, value, callback) => {
+                const phoneRegex = /^1\d{10}$/;
+                const emailRegex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
+                if (phoneRegex.test(value) || emailRegex.test(value)) {
+                    callback();
                 } else {
-                    console.log('error submit!!');
-                    return false;
+                    callback(new Error('请输入正确的手机号或邮箱'));
                 }
-            });
+            },
+            trigger: 'blur'
         }
-
-        function goToRegister() {
-            router.push({path:"/register"});
-        }
-
-        return {
-            ...toRefs(state),
-            rules,
-            loginFormRef,
-            handleLogin,
-            goToRegister
-        };
-    }
+    ],
+    password: [
+        { required:true, message: '请输入密码', trigger: 'blur' }
+    ]
 }
+
+const handleLoginSubmit = event => {
+    // 检查是否按下了回车键
+    if (event.key === 'Enter' || event.code === 'Enter') {
+        // 执行表单提交操作
+        handleLogin();
+    }
+};
+// 在组件加载后添加事件监听
+onMounted(() => {
+    window.addEventListener('keyup', handleLoginSubmit);
+});
+
+// 在组件销毁前移除事件监听
+onUnmounted(() => {
+    window.removeEventListener('keyup', handleLoginSubmit);
+});
+
+function handleLogin()  {
+    loginFormRef.value.validate((valid) => {
+        if (valid) {
+            alert('登录成功！');
+        } else {
+            console.log('error submit!!');
+            return false;
+        }
+    });
+}
+
+function goToRegister() {
+    router.push({path:"/register"});
+}
+
 </script>
 
 <style scoped>
