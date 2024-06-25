@@ -30,7 +30,7 @@ const routes = [
         path: '/citySelection',
         name: 'CitySelection',
         component: CitySelection
-    }
+    },
 ]
 
 const router = createRouter({

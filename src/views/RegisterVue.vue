@@ -13,6 +13,7 @@
                             @input="updatePrefixIcon"
                     ></el-input>
                     <el-button
+                        class="button-item"
                         type="primary"
                         @click="sendVerificationCode"
                         :disabled="!isInputValid"
