@@ -12,7 +12,7 @@
     "axios": "^1.7.2",
     "core-js": "^3.8.3",
     "echarts": "^5.5.0",
-    "element-china-area-data": "^6.1.0",
+    "element-china-area-data": "^5.0.1",
     "element-plus": "^2.7.5",
     "vue": "^3.2.13",
     "vue-router": "^4.3.3",

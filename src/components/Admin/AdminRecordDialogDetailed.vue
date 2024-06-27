@@ -1,6 +1,6 @@
 <template>
-    <el-dialog :model-value="visible" v-model="dialogVisible" title="监督信息详情" width="600" @close="handleClose">
-<!--        奇了个大怪啊，录个视频先-->
+    <el-dialog v-model="dialogDetailedVisible" title="监督信息详情" width="600">
+        <div>
         <el-form :model="dialogForm">
             <!-- ID和姓名 -->
             <el-row :gutter="20">
@@ -11,7 +11,7 @@
                 </el-col>
                 <el-col :span="12">
                     <el-form-item label="姓名">
-                        <el-input v-model="dialogForm.name" placeholder="请输入姓名"></el-input>
+                        <el-input v-model="dialogForm.member_name" placeholder="请输入姓名"></el-input>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -20,16 +20,13 @@
             <el-row :gutter="20">
                 <el-col :span="12">
                     <el-form-item label="网格地址">
-                        <el-select v-model="dialogForm.address" placeholder="请选择网格地址">
-                            <el-cascader
-                                    size="large"
-                                    :options="provinceAndCityData"
-                                    :model="selectedOptionsDialog"
-                                    :props="cityProps"
-                                    placeholder="请选择城市"
-                            >
-                            </el-cascader>
-                        </el-select>
+                        <el-cascader
+                            :options="cityData"
+                            v-model="dialogForm.address"
+                            :props="cityProps"
+                            placeholder="请选择城市"
+                        >
+                        </el-cascader>
                     </el-form-item>
                 </el-col>
                 <el-col :span="12">
@@ -51,6 +48,8 @@
                                 type="datetime"
                                 placeholder="选择日期时间"
                                 style="width: 100%;"
+                                format="YYYY/MM/DD HH:mm:ss"
+                                value-format="YYYY-MM-DD HH:mm:ss"
                         ></el-date-picker>
                     </el-form-item>
                 </el-col>
@@ -61,6 +60,8 @@
                                 type="datetime"
                                 placeholder="选择日期时间"
                                 style="width: 100%;"
+                                format="YYYY/MM/DD HH:mm:ss"
+                                value-format="YYYY-MM-DD HH:mm:ss"
                         ></el-date-picker>
                     </el-form-item>
                 </el-col>
@@ -97,83 +98,79 @@
                 <el-button type="danger" @click="exit">退出</el-button>
             </el-form-item>
         </el-form>
+        </div>
         <template #footer>
             <div class="dialog-footer">
                 <el-button @click="close">Cancel</el-button>
-                <el-button type="primary" @click="close1">Confirm</el-button>
+                <el-button type="primary" @click="close">Confirm</el-button>
             </div>
         </template>
     </el-dialog>
+
+    <AdminRecordDialogDistribute
+        ref=dialogDistributeRef
+    />
 </template>
 
 <script setup>
-import {reactive, ref, toRefs, watch} from "vue";
-import { provinceAndCityData } from "element-china-area-data";
+import {reactive, ref, toRefs} from "vue";
+import AdminRecordDialogDistribute from "@/components/Admin/AdminRecordDialogDistribute.vue";
+import cityData from '@/assets/json/pca-code.json'
 
 /**
  * @author Kardia_sfx
  * @date 06-25-2024 11:26
  */
 
-const dialogVisible = ref(false)
+const dialogDetailedVisible = ref(false)
+const dialogDistributeRef = ref(false)
 
-const open1 = () => {
-    dialogVisible.value = true
-}
-
-const close1 = () => {
-    dialogVisible.value = false
-}
-
-// const visible = ref(false)
 const props = defineProps({
-    visible: Boolean,
-})
-
-const emit = defineEmits(['update:visible'])
-
-const internalVisible = ref(props.visible)
-
-watch(() => props.visible, (newVal) => {
-    internalVisible.value = newVal;
-})
+    dialogForm: Object
+});
 
 const state = reactive({
-    dialogForm: {
+    dialogFormEmpty: {
+        id:"",
+        member_name:"",
         address: "",
+        type:"",
         description: "",
         occurrent_time: "",
         expect_resoluted_time: "",
         if_expedited: "",
+        attachments:[],
     },
-    selectedOptionsDialog: [],
 })
 
+// 采用toRefs将reactive状态解构出来
+const { dialogFormEmpty } = toRefs(state)
+const { dialogForm } = toRefs(props)
+
+const cityProps = {
+    expandTrigger: 'hover',
+    value:'code',   // 指定选项的 值 为选项对象的某个属性值
+    label:'name',   // 指定选项 标签 为选项对象的某个属性值
+    children:'children',    //指定选项的 子选项 为选项对象的某个属性值
+    emitPath:false
+}
+
 const open = () => {
-    console.log("对话框的open函数")
-    internalVisible.value = true
-    emit('update:visible',true)
+    console.log('Opening dialog with data:', props.dialogForm);
+    dialogDetailedVisible.value = true
 }
 
 const close = () => {
-    console.log("close function")
-    internalVisible.value = false
-    emit('update:visible', false)
+    dialogDetailedVisible.value = false
 }
 
-const handleClose = () => {
-    emit('update:visible', false)
-}
-
-const cityProps = {
-    expandTrigger: 'hover'
+const distribute = () => {
+    dialogDistributeRef.value.open()
 }
 
 defineExpose({
     open,
     close,
-    open1,
-    close1,
 })
 
 function exit() {
@@ -181,15 +178,12 @@ function exit() {
 }
 
 function assign() {
-
+    distribute()
 }
 
 function mark() {
 
 }
-
-// 采用toRefs将reactive状态解构出来
-const { dialogForm, selectedOptionsDialog } = toRefs(state);
 
 </script>
 

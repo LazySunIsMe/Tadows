@@ -73,7 +73,7 @@
 </template>
 
 <script setup>
-import {reactive, toRefs, ref, onMounted, onUnmounted} from "vue";
+import {reactive, ref, onMounted, onUnmounted} from "vue";
 import { useRouter } from "vue-router";
 import '@/assets/css/RegisterForm.css';
 

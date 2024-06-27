@@ -1,10 +1,11 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import HelloWorld from "@/components/HelloWorld.vue";
-import AdminWorkOrder from "@/views/AdminWorkOrder.vue";
+import AdminOversightRecord from "@/views/Admin/AdminOversightRecord.vue";
 import Admin from '@/components/Admin/Admin.vue';
 import LoginVue from "@/views/LoginVue.vue";
 import RegisterVue from "@/views/RegisterVue.vue";
 import CitySelection from "@/views/CitySelection.vue";
+import AdminWorkOrder from "@/views/Admin/AdminWorkOrder.vue";
 
 const routes = [
     {
@@ -17,6 +18,11 @@ const routes = [
         name: 'Admin',
         component: Admin,
         children: [
+            {
+                path: '/admin/oversightRecord',
+                name: 'AdminOversightRecord',
+                component: AdminOversightRecord
+            },
             {
                 path: '/admin/workOrder',
                 name: 'AdminWorkOrder',

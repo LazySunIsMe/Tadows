@@ -4,6 +4,7 @@ import ElementPlus from 'element-plus'
 import 'element-plus/theme-chalk/index.css'
 import router from './router'
 import * as ElIconModules from '@element-plus/icons'
+import store from './store/index.js';
 
 const app = createApp(App)
 
@@ -25,6 +26,6 @@ for(let iconName in ElIconModules) {
     app.component(iconName, ElIconModules[iconName]);
 }
 
-app.use(router).use(ElementPlus).mount('#app')
+app.use(router).use(store).use(ElementPlus).mount('#app')
 
 
