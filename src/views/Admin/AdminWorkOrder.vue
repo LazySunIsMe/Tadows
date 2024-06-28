@@ -2,18 +2,17 @@
     <el-container>
         <el-aside class="el-aside-inside">
             <h4>工单查询</h4>
-            <el-form  :model="orderForm" label-width="auto">
+            <el-form  :model="stateAdmin.orderSearchForm" label-width="auto">
                 <el-form-item label="监督员">
-                    <el-input v-model="orderForm.member_name" placeholder="监督员姓名"/>
+                    <el-input v-model="stateAdmin.orderSearchForm.member_name" placeholder="监督员姓名"/>
                 </el-form-item>
                 <el-form-item label="网格员">
-                    <el-input v-model="orderForm.grid_watcher_number" placeholder="网格员工号"/>
+                    <el-input v-model="stateAdmin.orderSearchForm.grid_watcher_number" placeholder="网格员工号"/>
                 </el-form-item>
                 <el-form-item label="网格地址">
                     <el-cascader
-                            size="large"
-                            :options="provinceAndCityData"
-                            v-model="addressArray"
+                            :options="cityData"
+                            v-model="stateAdmin.orderSearchForm.address"
                             :props="cityProps"
                             placeholder="请选择城市"
                     >
@@ -21,7 +20,7 @@
                 </el-form-item>
                 <el-form-item label="记录提交时间">
                     <el-date-picker
-                            v-model="orderForm.occurrent_time"
+                            v-model="stateAdmin.orderSearchForm.occurrent_time"
                             type="datetime"
                             placeholder="日期时间"
                             format="YYYY/MM/DD HH:mm:ss"
@@ -30,7 +29,7 @@
                 </el-form-item>
                 <el-form-item label="期待反馈时间">
                     <el-date-picker
-                            v-model="orderForm.expect_resoluted_time"
+                            v-model="stateAdmin.orderSearchForm.expect_resoluted_time"
                             type="datetime"
                             placeholder="日期时间"
                             format="YYYY/MM/DD HH:mm:ss"
@@ -38,7 +37,7 @@
                     />
                 </el-form-item>
                 <el-form-item label="状态">
-                    <el-select v-model="statusValue" placeholder="请选择状态" style="width: 240px">
+                    <el-select v-model="stateAdmin.orderSearchForm.status" placeholder="请选择状态" style="width: 240px">
                         <el-option
                                 v-for="item in statusOptions"
                                 :key="item.value"
@@ -48,19 +47,19 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="加急">
-                    <el-radio-group v-model="orderForm.if_expedited">
+                    <el-radio-group v-model="stateAdmin.orderSearchForm.if_expedited">
                         <el-radio value="1">是</el-radio>
                         <el-radio value="0">否</el-radio>
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item label="标记">
-                    <el-radio-group v-model="orderForm.if_signed">
+                    <el-radio-group v-model="stateAdmin.orderSearchForm.if_signed">
                         <el-radio value="1">是</el-radio>
                         <el-radio value="0">否</el-radio>
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item label="仅查看我处理的">
-                    <el-checkbox v-model="orderForm.if_checkSelf" />
+                    <el-checkbox v-model="stateAdmin.orderSearchForm.if_checkSelf" />
                 </el-form-item>
 
             </el-form>
@@ -72,13 +71,17 @@
                 <el-table :data="mainTableElement" border stripe style="width: 100%">
                     <el-table-column prop="member_name" label="监督员姓名" />
                     <el-table-column prop="grid_watcher_number" label="网格员工号" />
-                    <el-table-column prop="address" label="网格地址" />
+                    <el-table-column prop="address" label="网格地址">
+                        <template #default="scope">
+                            <span>{{ getCodeName(scope.row.address) }}</span>
+                        </template>
+                    </el-table-column>
                     <el-table-column prop="occurrent_time" label="记录提交时间" />
                     <el-table-column prop="expect_resoluted_time" label="期望解决时间" />
-                    <el-table-column prop="statusValue" label="状态" >
+                    <el-table-column prop="status" label="状态" >
                         <template #default="scope">
                             <!-- 自定义显示内容 -->
-                            <span>{{ getStatusLabel(scope.row.statusValue) }}</span>
+                            <span>{{ getStatusLabel(scope.row.status) }}</span>
                         </template>
                     </el-table-column>
                     <el-table-column prop="if_expedited" label="加急" >
@@ -92,8 +95,8 @@
                         </template>
                     </el-table-column>
                     <el-table-column fixed="right" label="操作">
-                        <template #default>
-                            <el-button link type="primary" size="small" @click="checkDetail">
+                        <template #default="scope">
+                            <el-button link type="primary" size="small" @click="checkDetail(scope.row)">
                                 查看详情
                             </el-button>
                             <el-button link type="primary" size="small" @click="distribute">
@@ -107,11 +110,12 @@
     </el-container>
 
     <AdminRecordDialogDetailed
-            ref=dialogDetailedRef
+        ref=dialogDetailedRef
+        :dialogForm="dialogForm"
     />
 
     <AdminRecordDialogDistribute
-            ref=dialogDistributeRef
+        ref=dialogDistributeRef
     />
 </template>
 
@@ -123,89 +127,85 @@
 import {reactive, ref, toRefs} from "vue";
 import AdminRecordDialogDistribute from "@/components/Admin/AdminRecordDialogDistribute.vue";
 import AdminRecordDialogDetailed from "@/components/Admin/AdminRecordDialogDetailed.vue";
-import {provinceAndCityData} from "element-china-area-data";
-import {statusOptions} from "@/components/Admin/AdminConsts"
+import cityData from '@/assets/json/pca-code.json'
+import {cityProps,getCodeName,stateAdmin,statusOptions} from "@/components/Admin/AdminConsts";
 
 const dialogDetailedRef = ref(false)
 const dialogDistributeRef = ref(false)
 
-const statusValue = ref('')
-
 const state = reactive({
-    orderForm: {
-        member_name:"",
-        address:"",
-        occurrent_time:"",
-        expect_resoluted_time:"",
-        if_expedited:"",
-        if_signed:"",
-        if_checkSelf:"",
-        grid_watcher_number:"",
-        statusValue:"",
-    },
-    mainTableElement: {}
+    mainTableElement: {},
+    dialogForm:{}
 })
 
-const { addressArray, orderForm, mainTableElement} = toRefs(state);
+const { mainTableElement, dialogForm } = toRefs(state);
 
 state.mainTableElement = ([
-    { member_name:'牛二',
-        address:'210100',
+    {
+        id:'1',
+        member_name:'牛二',
+        address:'210102',
         occurrent_time:'2024/06/26 20:04:55',
         expect_resoluted_time:'2024/07/26 20:04:55',
         if_expedited: 1,
         if_signed:0,
         if_checkSelf:0,
         grid_watcher_number:114514,
-        statusValue:0,
+        status:0,
     },
-    { member_name:'张三',
-        address:'210100',
+    {
+        id:'2',
+        member_name:'张三',
+        address:'210103',
         occurrent_time:'2024/06/25 20:04:55',
         expect_resoluted_time:'2024/08/25 20:04:55',
         if_expedited: 0,
         if_signed:1,
         if_checkSelf:0,
         grid_watcher_number:114514,
-        statusValue:0,
+        status:0,
     },
-    { member_name:'李四',
-        address:'210200',
+    {
+        id:'3',
+        member_name:'李四',
+        address:'210204',
         occurrent_time:'2024/06/24 20:04:55',
         expect_resoluted_time:'2024/07/24 20:04:55',
         if_expedited: 0,
         if_signed:0,
         if_checkSelf:1,
         grid_watcher_number:114514,
-        statusValue:2,
+        status:2,
     },
-    { member_name:'牛二',
-        address:'210200',
+    {
+        id:'4',
+        member_name:'牛二',
+        address:'210205',
         occurrent_time:'2024/06/25 20:04:55',
         expect_resoluted_time:'2024/07/25 20:04:55',
         if_expedited: 0,
         if_signed:1,
         if_checkSelf:1,
         grid_watcher_number:114514,
-        statusValue:3,
+        status:3,
     },
-    { member_name:'牛二',
-        address:'210300',
+    {
+        id:'5',
+        member_name:'牛二',
+        address:'210306',
         occurrent_time:'2024/06/23 20:04:55',
         expect_resoluted_time:'2024/08/23 20:04:55',
         if_expedited: 1,
         if_signed:0,
         if_checkSelf:0,
         grid_watcher_number:114514,
-        statusValue:1,
+        status:1,
     },
 ])
 
-const cityProps = {
-    expandTrigger: 'hover'
-}
-
-const checkDetail = () => {
+const checkDetail = (row) => {
+    state.dialogForm = { ...row }
+    console.log(state.dialogForm)
     dialogDetailedRef.value.open()
 }
 
@@ -217,7 +217,7 @@ const getStatusLabel = (value) => {
     // 检查传入的 value
     // console.log('Value:', value);
     // 检查 statusOptions 的值
-    // console.log('statusValue:', statusOptions);
+    // console.log('status:', statusOptions);
 
     // 根据 value 返回对应的状态文字
     const status = statusOptions.find(item => item.value === value);
@@ -225,26 +225,22 @@ const getStatusLabel = (value) => {
     return status ? status.label : '';
 }
 
-function doSelect() {
-    console.log(state.orderForm)
+const doSelect = () => {
+    console.log(stateAdmin.orderSearchForm)
 }
 
 const reset = () => {
-
+    stateAdmin.orderSearchForm = {
+        member_name:"",
+        address:"",
+        occurrent_time:"",
+        expect_resoluted_time:"",
+        if_expedited:"",
+        if_signed:"",
+        if_checkSelf:"",
+        grid_watcher_number:"",
+        status:"",
+    }
 }
 
 </script>
-
-<style scoped>
-
-.el-aside-inside {
-    width: 300px;
-    border-right: 1px solid #000000; /* 设置右边框为灰色，可以根据需要调整颜色和宽度 */
-    padding-right: 15px; /* 可选：增加右边距以增强分隔感 */
-}
-
-.el-main-inside {
-    background-color: #FF8800;
-}
-
-</style>

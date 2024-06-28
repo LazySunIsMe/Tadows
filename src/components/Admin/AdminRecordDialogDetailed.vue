@@ -32,8 +32,8 @@
                 <el-col :span="12">
                     <el-form-item label="监督信息类型">
                         <el-select v-model="dialogForm.type" placeholder="请选择监督信息类型">
-                            <el-option label="类型1" value="1"></el-option>
-                            <el-option label="类型2" value="2"></el-option>
+                            <el-option label="监督请求" value="0"></el-option>
+                            <el-option label="质询" value="1"></el-option>
                         </el-select>
                     </el-form-item>
                 </el-col>
@@ -116,6 +116,7 @@
 import {reactive, ref, toRefs} from "vue";
 import AdminRecordDialogDistribute from "@/components/Admin/AdminRecordDialogDistribute.vue";
 import cityData from '@/assets/json/pca-code.json'
+import {cityProps} from "@/components/Admin/AdminConsts";
 
 /**
  * @author Kardia_sfx
@@ -130,30 +131,11 @@ const props = defineProps({
 });
 
 const state = reactive({
-    dialogFormEmpty: {
-        id:"",
-        member_name:"",
-        address: "",
-        type:"",
-        description: "",
-        occurrent_time: "",
-        expect_resoluted_time: "",
-        if_expedited: "",
-        attachments:[],
-    },
 })
 
 // 采用toRefs将reactive状态解构出来
-const { dialogFormEmpty } = toRefs(state)
+const {  } = toRefs(state)
 const { dialogForm } = toRefs(props)
-
-const cityProps = {
-    expandTrigger: 'hover',
-    value:'code',   // 指定选项的 值 为选项对象的某个属性值
-    label:'name',   // 指定选项 标签 为选项对象的某个属性值
-    children:'children',    //指定选项的 子选项 为选项对象的某个属性值
-    emitPath:false
-}
 
 const open = () => {
     console.log('Opening dialog with data:', props.dialogForm);

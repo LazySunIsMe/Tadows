@@ -49,3 +49,13 @@
     /*使图片以圆形展示*/
     border-radius: 50%;
 }
+
+.el-aside-inside {
+    width: 300px;
+    border-right: 1px solid #000000; /* 设置右边框为灰色，可以根据需要调整颜色和宽度 */
+    padding-right: 15px; /* 可选：增加右边距以增强分隔感 */
+}
+
+.el-main-inside {
+    background-color: #FF8800;
+}
