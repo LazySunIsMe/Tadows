@@ -1,17 +1,16 @@
 <template>
     <el-dialog v-model="dialogDetailedVisible" title="监督信息详情" width="600">
-        <div>
-        <el-form :model="dialogForm">
+        <el-form :model="stateAdmin.dialogForm">
             <!-- ID和姓名 -->
             <el-row :gutter="20">
                 <el-col :span="12">
-                    <el-form-item label="ID">
-                        <el-input v-model="dialogForm.id" placeholder="请输入ID"></el-input>
+                    <el-form-item label="监督记录ID">
+                        <el-input v-model="stateAdmin.dialogForm.id" placeholder="请输入ID"></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="12">
-                    <el-form-item label="姓名">
-                        <el-input v-model="dialogForm.member_name" placeholder="请输入姓名"></el-input>
+                    <el-form-item label="监督员姓名">
+                        <el-input v-model="stateAdmin.dialogForm.member_name" placeholder="请输入姓名"></el-input>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -22,7 +21,7 @@
                     <el-form-item label="网格地址">
                         <el-cascader
                             :options="cityData"
-                            v-model="dialogForm.address"
+                            v-model="stateAdmin.dialogForm.address"
                             :props="cityProps"
                             placeholder="请选择城市"
                         >
@@ -31,7 +30,7 @@
                 </el-col>
                 <el-col :span="12">
                     <el-form-item label="监督信息类型">
-                        <el-select v-model="dialogForm.type" placeholder="请选择监督信息类型">
+                        <el-select v-model="stateAdmin.dialogForm.type" placeholder="请选择监督信息类型">
                             <el-option label="监督请求" value="0"></el-option>
                             <el-option label="质询" value="1"></el-option>
                         </el-select>
@@ -44,7 +43,7 @@
                 <el-col :span="12">
                     <el-form-item label="状况发生时间">
                         <el-date-picker
-                                v-model="dialogForm.occurrent_time"
+                                v-model="stateAdmin.dialogForm.occurrent_time"
                                 type="datetime"
                                 placeholder="选择日期时间"
                                 style="width: 100%;"
@@ -56,7 +55,7 @@
                 <el-col :span="12">
                     <el-form-item label="期望反馈时间">
                         <el-date-picker
-                                v-model="dialogForm.expect_resoluted_time"
+                                v-model="stateAdmin.dialogForm.expect_resoluted_time"
                                 type="datetime"
                                 placeholder="选择日期时间"
                                 style="width: 100%;"
@@ -71,7 +70,7 @@
             <el-form-item label="内容描述">
                 <el-input
                         type="textarea"
-                        v-model="dialogForm.description"
+                        v-model="stateAdmin.dialogForm.description"
                         placeholder="请输入内容描述"
                         rows="6"
                 ></el-input>
@@ -81,7 +80,7 @@
             <el-form-item label="附件预览">
                 <div class="attachment-preview">
                     <el-image
-                            v-for="(file, index) in dialogForm.attachments"
+                            v-for="(file, index) in stateAdmin.dialogForm.attachments"
                             :key="index"
                             :src="file.url"
                             :preview-src-list="previewList"
@@ -90,19 +89,24 @@
                     ></el-image>
                 </div>
             </el-form-item>
+        </el-form>
 
-            <!-- 按钮 -->
-            <el-form-item>
+        <div v-if="stateAdmin.dialogForm.status === 1 || stateAdmin.dialogForm.status === 2">
+            <hr style="border-top: 1px solid #ccc; margin: 10px 0;">
+            <DialogWorkFlow/>
+        </div>
+
+        <hr style="border-top: 1px solid #ccc; margin: 10px 0;">
+        <template #footer>
+            <div v-if="stateAdmin.dialogForm.status === 0 || _.isUndefined(stateAdmin.dialogForm.status)" class="dialog-footer">
                 <el-button type="primary" @click="assign">指派</el-button>
                 <el-button type="warning" @click="mark">标记</el-button>
                 <el-button type="danger" @click="exit">退出</el-button>
-            </el-form-item>
-        </el-form>
-        </div>
-        <template #footer>
-            <div class="dialog-footer">
-                <el-button @click="close">Cancel</el-button>
-                <el-button type="primary" @click="close">Confirm</el-button>
+            </div>
+            <div v-if="stateAdmin.dialogForm.status === 1 || stateAdmin.dialogForm.status === 2" class="dialog-footer">
+                <el-button type="primary" @click="assign">指派</el-button>
+                <el-button type="warning" @click="mark">实测AQI数据详情</el-button>
+                <el-button type="danger" @click="exit">退出</el-button>
             </div>
         </template>
     </el-dialog>
@@ -113,10 +117,12 @@
 </template>
 
 <script setup>
-import {reactive, ref, toRefs} from "vue";
+import {ref} from "vue";
 import AdminRecordDialogDistribute from "@/components/Admin/AdminRecordDialogDistribute.vue";
 import cityData from '@/assets/json/pca-code.json'
-import {cityProps} from "@/components/Admin/AdminConsts";
+import {cityProps, stateAdmin} from "@/components/Admin/AdminConsts";
+import DialogWorkFlow from "@/components/DialogWorkFlow.vue";
+import _ from "lodash";
 
 /**
  * @author Kardia_sfx
@@ -126,19 +132,8 @@ import {cityProps} from "@/components/Admin/AdminConsts";
 const dialogDetailedVisible = ref(false)
 const dialogDistributeRef = ref(false)
 
-const props = defineProps({
-    dialogForm: Object
-});
-
-const state = reactive({
-})
-
-// 采用toRefs将reactive状态解构出来
-const {  } = toRefs(state)
-const { dialogForm } = toRefs(props)
-
 const open = () => {
-    console.log('Opening dialog with data:', props.dialogForm);
+    console.log('Opening dialog with data:', stateAdmin.dialogForm);
     dialogDetailedVisible.value = true
 }
 
@@ -157,6 +152,7 @@ defineExpose({
 
 function exit() {
     // 退出逻辑
+    dialogDetailedVisible.value = false
 }
 
 function assign() {

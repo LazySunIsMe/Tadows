@@ -24,22 +24,28 @@
                             <template #title>{{ adminTitles[3] }}</template>
                         </el-menu-item>
                     </router-link>
-                    <el-menu-item index="4">
-                        <el-icon><WindPower /></el-icon>
-                        <template #title>{{ adminTitles[4] }}</template>
-                    </el-menu-item>
+                    <router-link to="/admin/aqiRecord">
+                        <el-menu-item index="4">
+                            <el-icon><WindPower /></el-icon>
+                            <template #title>{{ adminTitles[4] }}</template>
+                        </el-menu-item>
+                    </router-link>
                     <el-menu-item index="5">
                         <el-icon><DataLine /></el-icon>
                         <template #title>{{ adminTitles[5] }}</template>
                     </el-menu-item>
-                    <el-menu-item index="6">
-                        <el-icon><Edit /></el-icon>
-                        <template #title>{{ adminTitles[6] }}</template>
-                    </el-menu-item>
-                    <el-menu-item index="7">
-                        <el-icon><User /></el-icon>
-                        <template #title>{{ adminTitles[7] }}</template>
-                    </el-menu-item>
+                    <router-link to="/admin/notice">
+                        <el-menu-item index="6">
+                            <el-icon><Edit /></el-icon>
+                            <template #title>{{ adminTitles[6] }}</template>
+                        </el-menu-item>
+                    </router-link>
+                    <router-link to="/admin/user">
+                        <el-menu-item index="7">
+                            <el-icon><User /></el-icon>
+                            <template #title>{{ adminTitles[7] }}</template>
+                        </el-menu-item>
+                    </router-link>
                 </el-menu>
             </el-aside>
             <el-container>

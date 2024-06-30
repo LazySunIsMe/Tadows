@@ -1,24 +1,30 @@
 <template>
-    <el-dialog v-model="dialogVisible" title="检测任务指派" width="500" >
+    <el-dialog v-model="dialogVisible" title="检测任务指派" width="700" >
         <!-- 第一部分：监督任务ID、网格地址级联菜单和“只看空闲网格员”按钮 -->
-        <div>
-            <el-form :inline="true">
-                <el-form-item label="监督任务ID">
-                    <el-input v-model="taskId"></el-input>
-                </el-form-item>
-                <el-form-item label="网格地址">
-                    <el-cascader
-                        :options="gridOptions"
-                        v-model="selectedGrid"
-                        placeholder="请选择网格地址"
-                        style="width: 200px;"
-                    ></el-cascader>
-                </el-form-item>
-                <el-form-item>
-                    <el-button type="primary">只看空闲网格员</el-button>
-                </el-form-item>
-            </el-form>
-        </div>
+        <el-form :model="stateAdmin.dialogForm">
+            <el-row :gutter="20">
+                <el-col :span="8">
+                    <el-form-item label="监督记录ID">
+                        <el-input placeholder="记录id" v-model="stateAdmin.dialogForm.id"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                    <el-form-item label="网格地址">
+                        <el-cascader
+                            :options="cityData"
+                            v-model="stateAdmin.dialogForm.address"
+                            :props="cityProps"
+                            placeholder="请选择城市"
+                        ></el-cascader>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                    <el-form-item>
+                        <el-button type="primary">只看空闲网格员</el-button>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+        </el-form>
 
         <!-- 第二部分：表格展示网格员信息 -->
         <el-table :data="gridMembers" style="margin-top: 20px;">
@@ -40,34 +46,15 @@
  * @date 06-26-2024 10:48
  */
 import {ref} from "vue";
+import {cityProps, stateAdmin} from "@/components/Admin/AdminConsts";
+import cityData from "@/assets/json/pca-code.json";
 
 const dialogVisible = ref(false)
 
-const taskId = ref('');
-const selectedGrid = ref([]);
 const gridMembers = ref([
     { id: 1, name: '网格员A', completedTasks: 5, currentTasks: 2 },
     { id: 2, name: '网格员B', completedTasks: 3, currentTasks: 1 },
     { id: 3, name: '网格员C', completedTasks: 7, currentTasks: 3 },
-]);
-
-const gridOptions = ref([
-    {
-        value: '区域A',
-        label: '区域A',
-        children: [
-            { value: '网格A', label: '网格A' },
-            { value: '网格B', label: '网格B' },
-        ],
-    },
-    {
-        value: '区域B',
-        label: '区域B',
-        children: [
-            { value: '网格C', label: '网格C' },
-            { value: '网格D', label: '网格D' },
-        ],
-    },
 ]);
 
 const open = () => {

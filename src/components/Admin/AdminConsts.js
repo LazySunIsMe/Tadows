@@ -14,7 +14,7 @@ export const adminTitles = {
 };
 
 // 工单的四个状态
-export const statusOptions = [
+export const orderStatus = [
     {
         value: 0,
         label: '已提交',
@@ -30,6 +30,62 @@ export const statusOptions = [
     {
         value: 3,
         label: '已取消',
+    },
+]
+
+// AQI的六个评级
+export const aqiLevels = [
+    {
+        value: 1,
+        label: '优',
+    },
+    {
+        value: 2,
+        label: '良',
+    },
+    {
+        value: 3,
+        label: '轻度污染',
+    },
+    {
+        value: 4,
+        label: '中度污染',
+    },
+    {
+        value: 5,
+        label: '重度污染',
+    },
+    {
+        value: 6,
+        label: '严重污染',
+    },
+]
+
+// 公告的两个类型
+export const noticeType = [
+    {
+        value: 0,
+        label: '通知',
+    },
+    {
+        value: 1,
+        label: '动态',
+    },
+]
+
+// 公告的三个位置
+export const noticePosition = [
+    {
+        value: 0,
+        label: '下面',
+    },
+    {
+        value: 1,
+        label: '滚动条',
+    },
+    {
+        value: 2,
+        label: '横幅',
     },
 ]
 
@@ -53,7 +109,24 @@ export const stateAdmin = reactive({
         if_checkSelf:false,
         grid_watcher_number:"",
         status:"",
-    }
+    },
+    aqiSearchForm: {
+        record_time:"",
+        address:"",
+        aqi_value:"",
+        aqi_level:"",
+    },
+    noticeSearchForm: {
+        publish_time:"",
+        title_accurate:"",
+        title_vague:"",
+        type:"",
+        if_important:"",
+    },
+    userSearchForm: {
+
+    },
+    dialogForm: {}
 })
 
 // 城区级联选择器的参数

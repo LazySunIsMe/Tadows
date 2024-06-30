@@ -39,7 +39,7 @@
                 <el-form-item label="状态">
                     <el-select v-model="stateAdmin.orderSearchForm.status" placeholder="请选择状态" style="width: 240px">
                         <el-option
-                                v-for="item in statusOptions"
+                                v-for="item in orderStatus"
                                 :key="item.value"
                                 :label="item.label"
                                 :value="item.value"
@@ -111,7 +111,6 @@
 
     <AdminRecordDialogDetailed
         ref=dialogDetailedRef
-        :dialogForm="dialogForm"
     />
 
     <AdminRecordDialogDistribute
@@ -128,17 +127,16 @@ import {reactive, ref, toRefs} from "vue";
 import AdminRecordDialogDistribute from "@/components/Admin/AdminRecordDialogDistribute.vue";
 import AdminRecordDialogDetailed from "@/components/Admin/AdminRecordDialogDetailed.vue";
 import cityData from '@/assets/json/pca-code.json'
-import {cityProps,getCodeName,stateAdmin,statusOptions} from "@/components/Admin/AdminConsts";
+import {cityProps,getCodeName,stateAdmin,orderStatus} from "@/components/Admin/AdminConsts";
 
 const dialogDetailedRef = ref(false)
 const dialogDistributeRef = ref(false)
 
 const state = reactive({
     mainTableElement: {},
-    dialogForm:{}
 })
 
-const { mainTableElement, dialogForm } = toRefs(state);
+const { mainTableElement } = toRefs(state);
 
 state.mainTableElement = ([
     {
@@ -180,7 +178,7 @@ state.mainTableElement = ([
     {
         id:'4',
         member_name:'牛二',
-        address:'210205',
+        address:'210104',
         occurrent_time:'2024/06/25 20:04:55',
         expect_resoluted_time:'2024/07/25 20:04:55',
         if_expedited: 0,
@@ -192,7 +190,7 @@ state.mainTableElement = ([
     {
         id:'5',
         member_name:'牛二',
-        address:'210306',
+        address:'210105',
         occurrent_time:'2024/06/23 20:04:55',
         expect_resoluted_time:'2024/08/23 20:04:55',
         if_expedited: 1,
@@ -204,8 +202,8 @@ state.mainTableElement = ([
 ])
 
 const checkDetail = (row) => {
-    state.dialogForm = { ...row }
-    console.log(state.dialogForm)
+    stateAdmin.dialogForm = { ...row }
+    console.log(stateAdmin.dialogForm)
     dialogDetailedRef.value.open()
 }
 
@@ -216,13 +214,13 @@ const distribute = () => {
 const getStatusLabel = (value) => {
     // 检查传入的 value
     // console.log('Value:', value);
-    // 检查 statusOptions 的值
-    // console.log('status:', statusOptions);
+    // 检查 orderStatus 的值
+    // console.log('status:', orderStatus);
 
     // 根据 value 返回对应的状态文字
-    const status = statusOptions.find(item => item.value === value);
+    const status = orderStatus.find(item => item.value === value);
     // console.log(status);
-    return status ? status.label : '';
+    return status ? status.label : '未知';
 }
 
 const doSelect = () => {

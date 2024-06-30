@@ -1,7 +1,7 @@
 <template lang="html">
         <el-container>
             <el-aside class="el-aside-inside">
-                <h4>监督记录查询（已提交）</h4>
+                <h4>监督信息查询</h4>
                 <el-form  :model="stateAdmin.recordSearchForm" label-width="auto">
 <!--                    <el-form-item label="监督员">-->
 <!--                        <el-input v-model="state.recordSearchForm.member_name" placeholder="监督员姓名"/>-->
@@ -12,8 +12,7 @@
                             v-model="stateAdmin.recordSearchForm.address"
                             :props="cityProps"
                             placeholder="请选择城市"
-                        >
-                        </el-cascader>
+                        ></el-cascader>
                     </el-form-item>
                     <el-form-item label="监督信息内容">
                         <el-input v-model="stateAdmin.recordSearchForm.description" placeholder="监督记录描述"/>
@@ -80,7 +79,6 @@
 
     <AdminRecordDialogDetailed
         ref=dialogDetailedRef
-        :dialogForm="dialogForm"
     />
     
     <AdminRecordDialogDistribute
@@ -100,17 +98,16 @@ const dialogDistributeRef = ref(false)
 
 const state = reactive({
     mainTableElement: {},
-    dialogForm:{}
 })
 
-const { mainTableElement, dialogForm } = toRefs(state);
+const { mainTableElement } = toRefs(state);
 
 state.mainTableElement = ref([
     {id:'1', member_name:'牛二', address:'210103', description: '任务1描述超级长超级长超级长的描述超级长真的很长', occurrent_time:'2024/06/26 20:04:55', expect_resoluted_time:'2024/07/26 20:04:55', if_expedited: 1 },
-    {id:'2', member_name:'张三', address:['21','2101','210103'], description: '任务2描述', occurrent_time:'2024/06/25 20:04:55', expect_resoluted_time:'2024/08/25 20:04:55', if_expedited: 0 },
+    {id:'2', member_name:'张三', address:'210102', description: '任务2描述', occurrent_time:'2024/06/25 20:04:55', expect_resoluted_time:'2024/08/25 20:04:55', if_expedited: 0 },
     {id:'3', member_name:'李四', address:'210202', description: '任务3描述', occurrent_time:'2024/06/24 20:04:55', expect_resoluted_time:'2024/07/24 20:04:55', if_expedited: 0 },
     {id:'4', member_name:'牛二', address:'210203', description: '任务4描述', occurrent_time:'2024/06/25 20:04:55', expect_resoluted_time:'2024/07/25 20:04:55', if_expedited: 0 },
-    {id:'5', member_name:'牛二', description: '任务5描述', occurrent_time:'2024/06/23 20:04:55', expect_resoluted_time:'2024/08/23 20:04:55', if_expedited: 1 },
+    {id:'5', member_name:'牛二', address:'210104', description: '任务5描述', occurrent_time:'2024/06/23 20:04:55', expect_resoluted_time:'2024/08/23 20:04:55', if_expedited: 1 },
 ])
 
 const reset = () => {
@@ -129,8 +126,9 @@ const doSelect = () => {
 }
 
 const checkDetail = (row) => {
-    state.dialogForm = { ...row }
-    console.log("selected row:", state.dialogForm)
+    stateAdmin.dialogForm = {...row}
+    // console.log(stateAdmin.dialogForm.status)
+    console.log("selected row:", stateAdmin.dialogForm)
     dialogDetailedRef.value.open()
 }
 

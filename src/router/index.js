@@ -6,6 +6,9 @@ import LoginVue from "@/views/LoginVue.vue";
 import RegisterVue from "@/views/RegisterVue.vue";
 import CitySelection from "@/views/CitySelection.vue";
 import AdminWorkOrder from "@/views/Admin/AdminWorkOrder.vue";
+import AdminAQIRecord from "@/views/Admin/AdminAQIRecord.vue";
+import AdminNotice from "@/views/Admin/AdminNotice.vue";
+import AdminUser from "@/views/Admin/AdminUser.vue";
 
 const routes = [
     {
@@ -27,6 +30,21 @@ const routes = [
                 path: '/admin/workOrder',
                 name: 'AdminWorkOrder',
                 component: AdminWorkOrder
+            },
+            {
+                path: '/admin/aqiRecord',
+                name: 'AdminAQIRecord',
+                component: AdminAQIRecord
+            },
+            {
+                path: '/admin/notice',
+                name: 'AdminNotice',
+                component: AdminNotice
+            },
+            {
+                path: '/admin/user',
+                name: 'AdminUser',
+                component: AdminUser
             }
         ]
     },
