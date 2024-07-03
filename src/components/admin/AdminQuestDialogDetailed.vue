@@ -72,7 +72,7 @@
                         type="textarea"
                         v-model="stateAdmin.dialogForm.description"
                         placeholder="请输入内容描述"
-                        rows="6"
+                        :autosize="{ minRows: 6, maxRows: 6 }"
                 ></el-input>
             </el-form-item>
 
@@ -92,11 +92,11 @@
         </el-form>
 
         <div v-if="stateAdmin.dialogForm.status === 1 || stateAdmin.dialogForm.status === 2">
-            <hr style="border-top: 1px solid #ccc; margin: 10px 0;">
+            <hr class="dividing-line">
             <DialogWorkFlow/>
         </div>
 
-        <hr style="border-top: 1px solid #ccc; margin: 10px 0;">
+        <hr class="dividing-line">
         <template #footer>
             <div v-if="stateAdmin.dialogForm.status === 0 || _.isUndefined(stateAdmin.dialogForm.status)" class="dialog-footer">
                 <el-button type="primary" @click="assign">指派</el-button>
@@ -118,10 +118,12 @@
 
 <script setup>
 import {ref} from "vue";
-import AdminRecordDialogDistribute from "@/components/Admin/AdminRecordDialogDistribute.vue";
+import '@/assets/css/DividingLine.css';
+import AdminRecordDialogDistribute from "@/components/admin/AdminQuestDialogDistribute.vue";
 import cityData from '@/assets/json/pca-code.json'
-import {cityProps, stateAdmin} from "@/components/Admin/AdminConsts";
-import DialogWorkFlow from "@/components/DialogWorkFlow.vue";
+import {stateAdmin} from "@/components/admin/AdminConsts";
+import {cityProps} from "@/components/public/CityConsts";
+import DialogWorkFlow from "@/components/public/DialogWorkFlow.vue";
 import _ from "lodash";
 
 /**

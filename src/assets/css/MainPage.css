@@ -1,13 +1,12 @@
 .el-header {
-    background-color: #b3c0d1;
-    color: var(--el-text-color-primary);
+    background-color: #3654A2;
     text-align: center;
     line-height: 60px;
 
     display: flex;
     align-items: center;
     justify-content: space-between;
-    color: #1c51a3;
+    color: #FFFFFF;
 }
 
 .el-header h1 {
@@ -34,7 +33,7 @@
 
 .el-menu-vertical:not(.el-menu--collapse) {
     width: 200px;
-    min-height: 400px;
+    /*min-height: 400px;*/
 }
 
 .el-icon-fold {
@@ -57,6 +56,6 @@
 }
 
 .el-main-inside {
-    background-color: #FF8800;
+    background-color: #FF888F;
     margin-left: 10px;
 }

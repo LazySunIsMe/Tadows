@@ -14,9 +14,6 @@
                         value-format="YYYY-MM-DD HH:mm:ss "
                     />
                 </el-form-item>
-                <el-form-item label="标题精确查询">
-                    <el-input v-model="stateAdmin.noticeSearchForm.title_accurate" placeholder="公告标题"/>
-                </el-form-item>
                 <el-form-item label="标题模糊查询">
                     <el-input v-model="stateAdmin.noticeSearchForm.title_vague" placeholder="公告标题"/>
                 </el-form-item>
@@ -41,6 +38,9 @@
                     </el-select>
                 </el-form-item>
             </el-form>
+            <el-button type="primary" @click="doSelect">筛选</el-button>
+            <el-button type="warning" @click="reset">回原</el-button>
+            <el-button type="warning" @click="addNotice">addNotice</el-button>
         </el-aside>
         <el-main class="el-main-inside">
             <el-scrollbar>
@@ -48,15 +48,43 @@
             </el-scrollbar>
         </el-main>
     </el-container>
+
+    <AdminNoticeDialogAdd
+        ref=dialogAddRef
+    />
 </template>
 
-<script setup>
-/**
+<script setup>/**
  * @author Kardia_sfx
  * @date 06-30-2024 12:59
  */
+import {ref} from "vue";
 
-import {noticePosition, noticeType, stateAdmin} from "@/components/Admin/AdminConsts";
+const dialogAddRef = ref (false)
+
+const addNotice = () => {
+    // row
+    // stateAdmin.dialogForm = { ...row }
+    // console.log("selected row:", stateAdmin.dialogForm)
+    dialogAddRef.value.open()
+}
+
+const doSelect = () => {
+    console.log(stateAdmin.noticeSearchForm)
+}
+
+const reset = () => {
+    stateAdmin.noticeSearchForm = {
+        publish_time:"",
+        title_vague:"",
+        type:"",
+        if_important:"",
+    };
+};
+
+import {stateAdmin} from "@/components/admin/AdminConsts";
+import {noticePosition, noticeType} from "@/components/public/NoticeConsts";
+import AdminNoticeDialogAdd from "@/components/admin/AdminNoticeDialogAdd.vue";
 </script>
 
 <style scoped>

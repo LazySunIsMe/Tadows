@@ -4,6 +4,7 @@ module.exports = defineConfig({
   devServer: {
     port: 8084
   },
+  productionSourceMap: false,
   lintOnSave: false, // 关闭语法检查，防止不必要的语法报错（ESlint）
   chainWebpack: (config) => {
     config.plugin('define').tap((definitions) => {

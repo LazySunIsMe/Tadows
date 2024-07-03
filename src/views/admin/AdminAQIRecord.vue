@@ -3,7 +3,7 @@
         <el-aside class="el-aside-inside">
             <h4>AQI数据查询</h4>
             <el-form  :model="stateAdmin.aqiSearchForm" label-width="auto">
-                <el-form-item label="数据记录时间">
+                <el-form-item label="记录时间">
 <!--                    <el-date-picker-->
 <!--                            v-model="stateAdmin.aqiSearchForm.record_time"-->
 <!--                            type="datetime"-->
@@ -15,12 +15,11 @@
                     <el-date-picker
                             v-model="stateAdmin.aqiSearchForm.record_time"
                             type="datetimerange"
-                            range-separator="To"
-                            start-placeholder="Start date"
-                            end-placeholder="End date"
+                            range-separator="到"
+                            start-placeholder="开始时间"
+                            end-placeholder="结束时间"
                             format="YYYY/MM/DD HH:mm:ss"
-                            value-format="YYYY-MM-DD HH:mm:ss "
-                    />
+                            value-format="YYYY-MM-DD HH:mm:ss "/>
                 </el-form-item>
                 <el-form-item label="网格地址">
                     <el-cascader
@@ -47,6 +46,7 @@
             </el-form>
             <el-button type="primary" @click="doSelect">筛选</el-button>
             <el-button type="warning" @click="reset">回原</el-button>
+            <el-button type="warning" @click="checkDetail">checkDetail</el-button>
         </el-aside>
         <el-main class="el-main-inside">
             <el-scrollbar>
@@ -54,6 +54,10 @@
             </el-scrollbar>
         </el-main>
     </el-container>
+
+    <AdminAQIDialogDetailed
+        ref=dialogDetailedRef
+    />
 </template>
 
 <script setup>
@@ -61,8 +65,21 @@
  * @author Kardia_sfx
  * @date 06-30-2024 12:21
  */
-import {aqiLevels, cityProps, stateAdmin} from "@/components/Admin/AdminConsts";
+import {stateAdmin} from "@/components/admin/AdminConsts";
+import {cityProps} from "@/components/public/CityConsts";
 import cityData from "@/assets/json/pca-code.json";
+import AdminAQIDialogDetailed from "@/components/admin/AdminAQIDialogDetailed.vue";
+import {ref} from "vue";
+import {aqiLevels} from "@/components/public/AQIConsts";
+
+const dialogDetailedRef = ref(false)
+
+const checkDetail = () => {
+    // row
+    // stateAdmin.dialogForm = { ...row }
+    // console.log("selected row:", stateAdmin.dialogForm)
+    dialogDetailedRef.value.open()
+}
 
 const doSelect = () => {
     console.log(stateAdmin.aqiSearchForm)

@@ -2,17 +2,17 @@
     <el-container>
         <el-aside class="el-aside-inside">
             <h4>工单查询</h4>
-            <el-form  :model="stateAdmin.orderSearchForm" label-width="auto">
+            <el-form :model="stateAdmin.historySearchForm" label-width="auto">
                 <el-form-item label="监督员">
-                    <el-input v-model="stateAdmin.orderSearchForm.member_name" placeholder="监督员姓名"/>
+                    <el-input v-model="stateAdmin.historySearchForm.member_name" placeholder="监督员姓名"/>
                 </el-form-item>
                 <el-form-item label="网格员">
-                    <el-input v-model="stateAdmin.orderSearchForm.grid_watcher_number" placeholder="网格员工号"/>
+                    <el-input v-model="stateAdmin.historySearchForm.grid_watcher_number" placeholder="网格员工号"/>
                 </el-form-item>
                 <el-form-item label="网格地址">
                     <el-cascader
                             :options="cityData"
-                            v-model="stateAdmin.orderSearchForm.address"
+                            v-model="stateAdmin.historySearchForm.address"
                             :props="cityProps"
                             placeholder="请选择城市"
                     >
@@ -20,7 +20,7 @@
                 </el-form-item>
                 <el-form-item label="记录提交时间">
                     <el-date-picker
-                            v-model="stateAdmin.orderSearchForm.occurrent_time"
+                            v-model="stateAdmin.historySearchForm.occurrent_time"
                             type="datetime"
                             placeholder="日期时间"
                             format="YYYY/MM/DD HH:mm:ss"
@@ -29,7 +29,7 @@
                 </el-form-item>
                 <el-form-item label="期待反馈时间">
                     <el-date-picker
-                            v-model="stateAdmin.orderSearchForm.expect_resoluted_time"
+                            v-model="stateAdmin.historySearchForm.expect_resoluted_time"
                             type="datetime"
                             placeholder="日期时间"
                             format="YYYY/MM/DD HH:mm:ss"
@@ -37,7 +37,7 @@
                     />
                 </el-form-item>
                 <el-form-item label="状态">
-                    <el-select v-model="stateAdmin.orderSearchForm.status" placeholder="请选择状态" style="width: 240px">
+                    <el-select v-model="stateAdmin.historySearchForm.status" placeholder="请选择状态" style="width: 240px">
                         <el-option
                                 v-for="item in orderStatus"
                                 :key="item.value"
@@ -47,19 +47,19 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="加急">
-                    <el-radio-group v-model="stateAdmin.orderSearchForm.if_expedited">
+                    <el-radio-group v-model="stateAdmin.historySearchForm.if_expedited">
                         <el-radio value="1">是</el-radio>
                         <el-radio value="0">否</el-radio>
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item label="标记">
-                    <el-radio-group v-model="stateAdmin.orderSearchForm.if_signed">
+                    <el-radio-group v-model="stateAdmin.historySearchForm.if_signed">
                         <el-radio value="1">是</el-radio>
                         <el-radio value="0">否</el-radio>
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item label="仅查看我处理的">
-                    <el-checkbox v-model="stateAdmin.orderSearchForm.if_checkSelf" />
+                    <el-checkbox v-model="stateAdmin.historySearchForm.if_checkSelf" />
                 </el-form-item>
 
             </el-form>
@@ -99,7 +99,7 @@
                             <el-button link type="primary" size="small" @click="checkDetail(scope.row)">
                                 查看详情
                             </el-button>
-                            <el-button link type="primary" size="small" @click="distribute">
+                            <el-button link type="primary" size="small" @click="distribute(scope.row)">
                                 指派
                             </el-button>
                         </template>
@@ -109,11 +109,11 @@
         </el-main>
     </el-container>
 
-    <AdminRecordDialogDetailed
+    <AdminQuestDialogDetailed
         ref=dialogDetailedRef
     />
 
-    <AdminRecordDialogDistribute
+    <AdminQuestDialogDistribute
         ref=dialogDistributeRef
     />
 </template>
@@ -124,10 +124,12 @@
  * @date 06-27-2024 10:07
  */
 import {reactive, ref, toRefs} from "vue";
-import AdminRecordDialogDistribute from "@/components/Admin/AdminRecordDialogDistribute.vue";
-import AdminRecordDialogDetailed from "@/components/Admin/AdminRecordDialogDetailed.vue";
+import AdminQuestDialogDistribute from "@/components/admin/AdminQuestDialogDistribute.vue";
+import AdminQuestDialogDetailed from "@/components/admin/AdminQuestDialogDetailed.vue";
 import cityData from '@/assets/json/pca-code.json'
-import {cityProps,getCodeName,stateAdmin,orderStatus} from "@/components/Admin/AdminConsts";
+import {stateAdmin} from "@/components/admin/AdminConsts";
+import {cityProps,getCodeName} from "@/components/public/CityConsts";
+import {orderStatus} from "@/components/public/WorkOrderConsts";
 
 const dialogDetailedRef = ref(false)
 const dialogDistributeRef = ref(false)
@@ -203,11 +205,13 @@ state.mainTableElement = ([
 
 const checkDetail = (row) => {
     stateAdmin.dialogForm = { ...row }
-    console.log(stateAdmin.dialogForm)
+    console.log("selected row:", stateAdmin.dialogForm)
     dialogDetailedRef.value.open()
 }
 
-const distribute = () => {
+const distribute = (row) => {
+    stateAdmin.dialogForm = { ...row }
+    console.log("selected row:", stateAdmin.dialogForm)
     dialogDistributeRef.value.open()
 }
 
@@ -224,11 +228,11 @@ const getStatusLabel = (value) => {
 }
 
 const doSelect = () => {
-    console.log(stateAdmin.orderSearchForm)
+    console.log(stateAdmin.historySearchForm)
 }
 
 const reset = () => {
-    stateAdmin.orderSearchForm = {
+    stateAdmin.historySearchForm = {
         member_name:"",
         address:"",
         occurrent_time:"",

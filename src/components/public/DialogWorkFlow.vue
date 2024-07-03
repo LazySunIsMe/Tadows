@@ -7,11 +7,11 @@
         <el-step title="Step 2" :icon="User" />
         <el-step title="Step 3" :icon="Comment" />
     </el-steps>
-    <el-form :model="stateAdmin.dialogForm">
+    <el-form :model="orderState.dialogForm">
         <el-form-item label="状态">
-            <el-select v-model="stateAdmin.dialogForm.status" placeholder="请选择状态" style="width: 240px">
+            <el-select v-model="orderState.dialogForm.status" placeholder="请选择状态" style="width: 240px">
                 <el-option
-                    v-for="item in statusOptions"
+                    v-for="item in orderStatus"
                     :key="item.value"
                     :label="item.label"
                     :value="item.value"
@@ -26,10 +26,18 @@
             </el-col>
             <el-col :span="12">
                 <el-form-item label="分配网格员">
-                    <el-input v-model="stateAdmin.dialogForm.grid_watcher_number" placeholder="网格员姓名"/>
+                    <el-input v-model="orderState.dialogForm.grid_watcher_number" placeholder="网格员姓名"/>
                 </el-form-item>
             </el-col>
         </el-row>
+        <el-form-item label="网格员反馈信息">
+            <el-input
+                type="textarea"
+                v-model="orderState.dialogForm.grid_watcher_reply"
+                placeholder="网格员反馈信息"
+                :autosize="{ minRows: 6, maxRows: 6 }"
+            />
+        </el-form-item>
     </el-form>
 </template>
 
@@ -40,7 +48,7 @@
  */
 
 import {Upload, User, Comment} from "@element-plus/icons";
-import {stateAdmin} from "@/components/Admin/AdminConsts";
+import {orderState, orderStatus} from "@/components/public/WorkOrderConsts";
 
 
 </script>

@@ -1,5 +1,5 @@
 <template>
-    <el-dialog v-model="dialogVisible" title="检测任务指派" width="700" >
+    <el-dialog v-model="dialogDistributeVisible" title="检测任务指派" width="700" >
         <!-- 第一部分：监督任务ID、网格地址级联菜单和“只看空闲网格员”按钮 -->
         <el-form :model="stateAdmin.dialogForm">
             <el-row :gutter="20">
@@ -46,10 +46,11 @@
  * @date 06-26-2024 10:48
  */
 import {ref} from "vue";
-import {cityProps, stateAdmin} from "@/components/Admin/AdminConsts";
+import {stateAdmin} from "@/components/admin/AdminConsts";
+import {cityProps} from "@/components/public/CityConsts";
 import cityData from "@/assets/json/pca-code.json";
 
-const dialogVisible = ref(false)
+const dialogDistributeVisible = ref(false)
 
 const gridMembers = ref([
     { id: 1, name: '网格员A', completedTasks: 5, currentTasks: 2 },
@@ -58,11 +59,11 @@ const gridMembers = ref([
 ]);
 
 const open = () => {
-    dialogVisible.value = true
+    dialogDistributeVisible.value = true
 }
 
 const close = () => {
-    dialogVisible.value = false
+    dialogDistributeVisible.value = false
 }
 
 defineExpose({

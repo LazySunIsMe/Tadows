@@ -2,24 +2,24 @@
         <el-container>
             <el-aside class="el-aside-inside">
                 <h4>监督信息查询</h4>
-                <el-form  :model="stateAdmin.recordSearchForm" label-width="auto">
+                <el-form :model="stateAdmin.questSearchForm" label-width="auto">
 <!--                    <el-form-item label="监督员">-->
 <!--                        <el-input v-model="state.recordSearchForm.member_name" placeholder="监督员姓名"/>-->
 <!--                    </el-form-item>-->
                     <el-form-item label="网格地址">
                         <el-cascader
                             :options="cityData"
-                            v-model="stateAdmin.recordSearchForm.address"
+                            v-model="stateAdmin.questSearchForm.address"
                             :props="cityProps"
                             placeholder="请选择城市"
                         ></el-cascader>
                     </el-form-item>
                     <el-form-item label="监督信息内容">
-                        <el-input v-model="stateAdmin.recordSearchForm.description" placeholder="监督记录描述"/>
+                        <el-input v-model="stateAdmin.questSearchForm.description" placeholder="监督记录描述"/>
                     </el-form-item>
                     <el-form-item label="记录提交时间">
                         <el-date-picker
-                            v-model="stateAdmin.recordSearchForm.occurrent_time"
+                            v-model="stateAdmin.questSearchForm.occurrent_time"
                             type="datetime"
                             placeholder="日期时间"
                             format="YYYY/MM/DD HH:mm:ss"
@@ -28,7 +28,7 @@
                     </el-form-item>
                     <el-form-item label="期待反馈时间">
                         <el-date-picker
-                            v-model="stateAdmin.recordSearchForm.expect_resoluted_time"
+                            v-model="stateAdmin.questSearchForm.expect_resoluted_time"
                             type="datetime"
                             placeholder="日期时间"
                             format="YYYY/MM/DD HH:mm:ss"
@@ -36,7 +36,7 @@
                         />
                     </el-form-item>
                     <el-form-item label="加急">
-                        <el-radio-group v-model="stateAdmin.recordSearchForm.if_expedited">
+                        <el-radio-group v-model="stateAdmin.questSearchForm.if_expedited">
                             <el-radio value="1">是</el-radio>
                             <el-radio value="0">否</el-radio>
                         </el-radio-group>
@@ -67,7 +67,7 @@
                                 <el-button link type="primary" size="small" @click="checkDetail(scope.row)">
                                     查看详情
                                 </el-button>
-                                <el-button link type="primary" size="small" @click="distribute">
+                                <el-button link type="primary" size="small" @click="distribute(scope.row)">
                                     指派
                                 </el-button>
                             </template>
@@ -77,11 +77,11 @@
             </el-main>
         </el-container>
 
-    <AdminRecordDialogDetailed
+    <AdminQuestDialogDetailed
         ref=dialogDetailedRef
     />
     
-    <AdminRecordDialogDistribute
+    <AdminQuestDialogDistribute
         ref=dialogDistributeRef
     />
 </template>
@@ -89,9 +89,10 @@
 <script setup>
 import {reactive, ref, toRefs} from "vue";
 import cityData from '@/assets/json/pca-code.json'
-import {cityProps, getCodeName, stateAdmin} from "@/components/Admin/AdminConsts";
-import AdminRecordDialogDetailed from "@/components/Admin/AdminRecordDialogDetailed.vue";
-import AdminRecordDialogDistribute from "@/components/Admin/AdminRecordDialogDistribute.vue";
+import {stateAdmin} from "@/components/admin/AdminConsts";
+import {cityProps,getCodeName} from "@/components/public/CityConsts";
+import AdminQuestDialogDetailed from "@/components/admin/AdminQuestDialogDetailed.vue";
+import AdminQuestDialogDistribute from "@/components/admin/AdminQuestDialogDistribute.vue";
 
 const dialogDetailedRef = ref(false)
 const dialogDistributeRef = ref(false)
@@ -100,7 +101,7 @@ const state = reactive({
     mainTableElement: {},
 })
 
-const { mainTableElement } = toRefs(state);
+const { mainTableElement } = toRefs(state)
 
 state.mainTableElement = ref([
     {id:'1', member_name:'牛二', address:'210103', description: '任务1描述超级长超级长超级长的描述超级长真的很长', occurrent_time:'2024/06/26 20:04:55', expect_resoluted_time:'2024/07/26 20:04:55', if_expedited: 1 },
@@ -111,18 +112,18 @@ state.mainTableElement = ref([
 ])
 
 const reset = () => {
-    stateAdmin.recordSearchForm = {
+    stateAdmin.questSearchForm = {
         member_name:"",
         address: "",
         description: "",
         occurrent_time: "",
         expect_resoluted_time: "",
         if_expedited: "",
-    };
-};
+    }
+}
 
 const doSelect = () => {
-    console.log(stateAdmin.recordSearchForm)
+    console.log(stateAdmin.questSearchForm)
 }
 
 const checkDetail = (row) => {
@@ -132,7 +133,9 @@ const checkDetail = (row) => {
     dialogDetailedRef.value.open()
 }
 
-const distribute = () => {
+const distribute = (row) => {
+    stateAdmin.dialogForm = {...row}
+    console.log("selected row:", stateAdmin.dialogForm)
     dialogDistributeRef.value.open()
 }
 
